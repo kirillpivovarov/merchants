@@ -232,7 +232,7 @@ test("no browser errors or unexpected network failures on overview", async ({
   ).toBe(true);
 });
 
-test("monochrome styling, Montserrat and text-only identity on every screen", async ({
+test("blue and sky-blue styling, Montserrat and text-only identity on every screen", async ({
   page,
 }) => {
   await page.goto("/");
@@ -262,7 +262,13 @@ test("monochrome styling, Montserrat and text-only identity on every screen", as
         ] as const) {
           const value = style[property],
             rgb = value.match(/^rgba?\(\s*(\d+)[, ]+\s*(\d+)[, ]+\s*(\d+)/);
-          if (rgb && (rgb[1] !== rgb[2] || rgb[2] !== rgb[3]))
+          if (
+            rgb &&
+            !(
+              Number(rgb[3]) >= Number(rgb[2]) &&
+              Number(rgb[2]) >= Number(rgb[1])
+            )
+          )
             result.push(
               element.tagName +
                 "." +
@@ -276,7 +282,21 @@ test("monochrome styling, Montserrat and text-only identity on every screen", as
       }
       return result;
     });
-    expect(violations, route + " must use only neutral colors").toEqual([]);
+    expect(
+      violations,
+      route + " must use the blue, sky-blue and neutral palette",
+    ).toEqual([]);
+    expect(
+      await page
+        .locator(".primary")
+        .first()
+        .evaluate((el) => getComputedStyle(el).backgroundColor),
+    ).toBe("rgb(37, 99, 235)");
+    expect(
+      await page
+        .locator(".sidebar")
+        .evaluate((el) => getComputedStyle(el).backgroundColor),
+    ).toBe("rgb(12, 27, 53)");
     expect(
       await page
         .locator("body")
@@ -290,7 +310,7 @@ test("monochrome styling, Montserrat and text-only identity on every screen", as
   }
 });
 
-test("printable audit uses the current text identity, neutral palette and local Montserrat", async ({
+test("printable audit uses the current text identity, blue palette and local Montserrat", async ({
   page,
   request,
 }) => {
@@ -315,7 +335,7 @@ test("printable audit uses the current text identity, neutral palette and local 
       .locator("a")
       .first()
       .evaluate((el) => getComputedStyle(el).color),
-  ).toBe("rgb(23, 23, 23)");
+  ).toBe("rgb(37, 99, 235)");
   await page.screenshot({
     path: "test-results/audit-report.png",
     fullPage: true,
