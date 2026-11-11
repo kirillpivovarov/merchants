@@ -83,7 +83,7 @@ const server = http.createServer(async (req, res) => {
       }
       chunks.push(chunk);
     }
-    const origin = "http://" + req.headers.host,
+    const origin = process.env.PUBLIC_ORIGIN ?? "http://" + req.headers.host,
       url = new URL(req.url, origin);
     // Never trust caller-supplied identity headers; Node uses its own session boundary.
     const authenticated = sessionValid(
@@ -167,6 +167,8 @@ const server = http.createServer(async (req, res) => {
       ".js": "text/javascript",
       ".css": "text/css",
       ".svg": "image/svg+xml",
+      ".woff2": "font/woff2",
+      ".woff": "font/woff",
     };
     res.writeHead(200, {
       "content-type": mime[extname(file)] ?? "application/octet-stream",

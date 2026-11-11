@@ -18,11 +18,12 @@ AUTH_TOKEN='replace-with-a-long-random-secret' HOST=0.0.0.0 npm start
 | HOST | 127.0.0.1 | Интерфейс; внешний без ключа запрещён |
 | DB_PATH | data/meridian.sqlite | Постоянный путь SQLite |
 | AUTH_TOKEN | отсутствует | Ключ входа; хранить вне Git |
+| PUBLIC_ORIGIN | HTTP + Host запроса | Точный внешний HTTPS-origin за reverse proxy |
 | COOKIE_SECURE | false | `true` при HTTPS за reverse proxy |
 
 `.env.example` документирует имена. Node автоматически не читает `.env`; задайте переменные средствами оболочки/службы или используйте `node --env-file=.env server/node.mjs`.
 
-Для внешнего доступа нужен reverse proxy с HTTPS, проксированием Host и тайм-аутом минимум 70 секунд (до 3 живых сайтов в batch). Передайте COOKIE_SECURE=true при HTTPS. Не проксируйте недоверенные identity-заголовки в Worker-адаптер вне платформы Sites. Порт контейнера по умолчанию публикуется только на loopback хоста.
+Для внешнего доступа нужен reverse proxy с HTTPS, проксированием Host и тайм-аутом минимум 70 секунд (до 3 живых сайтов в batch). Передайте COOKIE_SECURE=true и PUBLIC_ORIGIN=https://ваш-домен при HTTPS; origin используется для защиты от CSRF. Не проксируйте недоверенные identity-заголовки в Worker-адаптер вне платформы Sites. Порт контейнера по умолчанию публикуется только на loopback хоста.
 
 ## Docker
 
