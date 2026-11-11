@@ -2,6 +2,12 @@
 
 Полнофункциональный пилот для аналитика банка: React + TypeScript, Node.js 24, SQLite, общий движок оценки риска и отдельный адаптер размещения в Cloudflare Workers / Sites с D1. Русский интерфейс, вымышленные демоданные, живая проверка публичных сайтов в Node.js.
 
+**[Открыть тестовый стенд](https://meridian-merchant-risk-kp.kirillpivovarov.chatgpt.site)** · приватный доступ владельца.
+
+[![Regression](https://github.com/kirillpivovarov/merchants/actions/workflows/ci.yml/badge.svg)](https://github.com/kirillpivovarov/merchants/actions/workflows/ci.yml)
+
+Проверки: **76 unit/API/runtime + 10 E2E PASS**, покрытие выбранного ядра 98,25% строк. [Отчёт](docs/TESTING.md).
+
 ## Документация
 
 - [Бизнес-требования и анализ референсов](docs/BUSINESS_REQUIREMENTS.md)
