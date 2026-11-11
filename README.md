@@ -6,7 +6,7 @@
 
 [![Regression](https://github.com/kirillpivovarov/merchants/actions/workflows/ci.yml/badge.svg)](https://github.com/kirillpivovarov/merchants/actions/workflows/ci.yml)
 
-Проверки: **77 unit/API/runtime**, браузерный регресс desktop/mobile и оформление отчёта; покрытие выбранного ядра 98,25% строк. [Отчёт](docs/TESTING.md).
+Проверки: **77 unit/API/runtime + 12 E2E PASS**, включая монохромную палитру, Montserrat и печатный отчёт. Покрытие выбранного ядра — 98,25% строк. [Отчёт](docs/TESTING.md).
 
 ## Документация
 
