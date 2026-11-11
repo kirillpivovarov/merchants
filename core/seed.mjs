@@ -24,8 +24,11 @@ export function demoObservation(merchant) {
         : null,
     pages: [
       {
-        url: merchant.url + "/",
-        title: merchant.name,
+        url:
+          (profile === "attention"
+            ? merchant.url.replace("https:", "http:")
+            : merchant.url) + "/",
+        title: profile === "alarm" ? "" : merchant.name,
         text,
         links: [merchant.url + "/terms", "https://t.me/merchant_demo"],
         frames: [],

@@ -12,6 +12,25 @@ export default {
           JSON.stringify({ error: "Хранилище D1 не подключено" }),
           { status: 503, headers: { "content-type": "application/json" } },
         );
+      // Health verifies the migration-owned schema without disclosing business data.
+      if (url.pathname === "/api/health") {
+        try {
+          await env.DB.prepare(
+            "SELECT id FROM workspace_state LIMIT 1",
+          ).first();
+          return Response.json({
+            status: "ok",
+            version: "1.0.0",
+            storage: "ready",
+            mode: "demo",
+          });
+        } catch {
+          return Response.json(
+            { error: "Миграция хранилища не применена" },
+            { status: 503 },
+          );
+        }
+      }
       const actor = request.headers.get("oai-authenticated-user-id");
       return handleApi(request, {
         store: new StateStore(new D1Adapter(env.DB, seedState)),

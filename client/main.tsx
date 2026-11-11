@@ -165,9 +165,9 @@ function App() {
       setBusy(false);
     }
   }
-  async function scan(ids: string[]) {
+  async function scan(ids: string[], mode = scanMode) {
     await action(
-      () => api("/scans", { ids, mode: scanMode }),
+      () => api("/scans", { ids, mode }),
       "Проверка завершена. Отчёты обновлены",
     );
   }
@@ -261,6 +261,7 @@ function App() {
           {nav.map((n) => (
             <button
               key={n.id}
+              aria-label={n.name}
               className={page === n.id ? "active" : ""}
               onClick={() => go(n.id)}
             >
@@ -545,10 +546,15 @@ function App() {
                   <button
                     className="text-button"
                     disabled={busy || !rows.length}
-                    onClick={() => scan(rows.slice(0, 100).map((m) => m.id))}
+                    onClick={() =>
+                      scan(
+                        rows.slice(0, 100).map((m) => m.id),
+                        "demo",
+                      )
+                    }
                   >
                     <RefreshCw size={15} className={busy ? "spin" : ""} />
-                    Проверить портфель
+                    Демо-проверка портфеля
                   </button>
                 </div>
               </div>
@@ -1659,7 +1665,7 @@ function MerchantDrawer({
             </p>
             <label>
               Решение
-              <select name="verdict">
+              <select name="verdict" aria-label="Решение">
                 <option value="confirmed">Подтвердить находку</option>
                 <option value="false_positive">Ложное срабатывание</option>
                 <option value="pending">На рассмотрении</option>

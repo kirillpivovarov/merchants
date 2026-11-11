@@ -160,3 +160,8 @@ describe("Input and export boundaries", () => {
     expect(csvCell('a;"b')).toBe('"a;""b"');
   });
 });
+
+it("provides synthetic scenarios in all four risk zones", () => {
+  const summary = portfolio(seedState());
+  expect(Object.values(summary.risks).every((n) => n > 0)).toBe(true);
+});

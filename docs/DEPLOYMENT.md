@@ -38,7 +38,7 @@ docker compose up --build -d
 
 - Существующий project_id сохраняется в `.openai/hosting.json`; повторно Site не создавать.
 - `npm run build` выпускает React и `dist/server/index.js` с общим API и встроенными ресурсами.
-- D1 binding — `DB`; миграции генерируются Drizzle и входят в deploy-архив.
+- D1 binding — `DB`; SQL-миграции хранятся в Git (журнал совместим с Drizzle) и входят в deploy-архив.
 - Приватный доступ владельца; не менять audience ради тестирования.
 - В этой среде отсутствовал поставляемый с Sites локальный source helper. Git-синхронизация и упаковка выполнены эквивалентными командами с временным credential через stdin, без сохранения его в файлах/исходниках.
 - Workers не выполняет Node-сканер и расписание: `capabilities.live=false`, `capabilities.scheduler=false`; API возвращает 503 на недоступные операции. Демо-проверки и остальные операции сохраняются в D1.
