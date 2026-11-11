@@ -1,8 +1,32 @@
 # Регрессионное тестирование
 
-Обновление синей и голубой палитры «Демо для ТКБ»: функциональные сценарии сохранены, проверки выполняются для нового оформления.
+Итог обновления синей и голубой палитры «Демо для ТКБ»: **PASS**. Проверен код `b81ab40553295a485f3de74d9aa69086d563e841`, 11 ноября 2026 года.
 
-Проверяются TypeScript, сборка, ядро/API, настольный и мобильный браузер, согласованная палитра всех экранов, Montserrat и печатный отчёт. Итоги и актуальные снимки добавляются после успешного прогона.
+[Успешный GitHub Actions](https://github.com/kirillpivovarov/merchants/actions/runs/43006408458) · [HTML-отчёт и артефакты](https://github.com/kirillpivovarov/merchants/actions/runs/43006408458/artifacts/13847928853).
+
+| Проверка | Результат |
+|---|---|
+| TypeScript и production build | PASS |
+| Unit / API / storage / Node runtime / scanner | **77 из 77**, 5 файлов |
+| Chromium, desktop и mobile | **12 из 12**, без повторов, 10,6 с |
+| Палитра на шести экранах | PASS: синие, голубые и нейтральные цвета; основные кнопки `#2563eb`, навигация `#0c1b35` |
+| Шрифт и текстовое название | PASS: Montserrat, «Демо для ТКБ», без SVG в бренде |
+| Печатный отчёт | PASS: синие ссылки, голубые акценты, локальный шрифт |
+| Собранный Worker | PASS: ресурсы, identity, D1-совместимый SQLite, сохранение, scan, report |
+| Развёртывание Sites | succeeded |
+| Размещённые `/` и `/api/health` | 200, хранилище ready |
+| `/api/state` без пользовательской identity | 401, защита записей сохранена |
+| Дифф бизнес-модулей, сканера, API, хранилища и hosting identity | Изменений нет |
+
+Покрытие выбранного ядра: **98,25% строк**, 97,47% statements, 97,14% functions, 93,05% branches. Этот показатель не относится ко всему JSX.
+
+Публикация: https://tkb-demo.kirillpivovarov.chatgpt.site . Версия: `appgprj_6af4363fc42c8191a6025c05bd021e11~appgver_0a47f92c4a9c8191bac346893af0bc91`; deployment `appgdep_6af447e163508191a8ecd461cb613bed`.
+
+## Оформление и снимки из успешного прогона
+
+Палитра и типографика описаны в [DESIGN.md](DESIGN.md). Снимки: [обзор](screenshots/overview-desktop.png), [мобильный экран](screenshots/overview-mobile.png), [карточка](screenshots/merchant-evidence.png), [печатный отчёт](screenshots/audit-report.png).
+
+![Демо для ТКБ — обзор](screenshots/overview-desktop.png)
 
 ## Уровни
 
