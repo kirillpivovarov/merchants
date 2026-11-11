@@ -1,18 +1,19 @@
-# Меридиан — мониторинг сайтов мерчантов
+# Демо для ТКБ — мониторинг сайтов мерчантов
 
 Полнофункциональный пилот для аналитика банка: React + TypeScript, Node.js 24, SQLite, общий движок оценки риска и отдельный адаптер размещения в Cloudflare Workers / Sites с D1. Русский интерфейс, вымышленные демоданные, живая проверка публичных сайтов в Node.js.
 
-**[Открыть тестовый стенд](https://meridian-merchant-risk-kp.kirillpivovarov.chatgpt.site)** · приватный доступ владельца.
+**[Открыть тестовый стенд](https://tkb-demo.kirillpivovarov.chatgpt.site)** · приватный доступ владельца.
 
 [![Regression](https://github.com/kirillpivovarov/merchants/actions/workflows/ci.yml/badge.svg)](https://github.com/kirillpivovarov/merchants/actions/workflows/ci.yml)
 
-Проверки: **76 unit/API/runtime + 10 E2E PASS**, покрытие выбранного ядра 98,25% строк. [Отчёт](docs/TESTING.md).
+Проверки: **77 unit/API/runtime**, браузерный регресс desktop/mobile и оформление отчёта; покрытие выбранного ядра 98,25% строк. [Отчёт](docs/TESTING.md).
 
 ## Документация
 
 - [Бизнес-требования и анализ референсов](docs/BUSINESS_REQUIREMENTS.md)
 - [Техническое задание и критерии приёмки](docs/SPECIFICATION.md)
 - [Архитектура и модель данных](docs/ARCHITECTURE.md)
+- [Оформление и типографика](docs/DESIGN.md)
 - [Контракт API](docs/API.md)
 - [Развёртывание и эксплуатация](docs/DEPLOYMENT.md)
 - [Регрессионное тестирование](docs/TESTING.md)

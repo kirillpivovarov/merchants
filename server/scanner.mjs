@@ -39,7 +39,7 @@ export async function fetchPublic(
       {
         method: "GET",
         headers: {
-          "User-Agent": "MeridianMonitor/1.0 (+site-audit; limited crawl)",
+          "User-Agent": "TkbDemoMonitor/1.0 (+site-audit; limited crawl)",
           Accept: "text/html,text/plain",
         },
         lookup: (_host, options, cb) =>

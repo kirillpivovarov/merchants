@@ -2,10 +2,10 @@ import { it, expect } from "vitest";
 import { spawn } from "node:child_process";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { once } from "node:events";
 it("Node runtime authenticates, persists SQLite records and restores them after restart", async () => {
-  const dir = await mkdtemp(join(tmpdir(), "meridian-test-")),
+  const dir = await mkdtemp(join(tmpdir(), "tkb-demo-test-")),
     port = 33000 + Math.floor(Math.random() * 15000),
     base = "http://127.0.0.1:" + port;
   const launch = async () => {
@@ -25,7 +25,7 @@ it("Node runtime authenticates, persists SQLite records and restores them after 
         10000,
       );
       child.stdout.on("data", (data) => {
-        if (String(data).includes("Meridian running")) {
+        if (String(data).includes("TKB Demo running")) {
           clearTimeout(timer);
           resolve();
         }
@@ -81,6 +81,71 @@ it("Node runtime authenticates, persists SQLite records and restores them after 
       true,
     );
     expect(state.capabilities.live).toBe(true);
+  } finally {
+    if (child && child.exitCode === null) await stop(child);
+    await rm(dir, { recursive: true, force: true });
+  }
+}, 20000);
+
+it("keeps the existing SQLite data file when upgrading the default installation", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "tkb-demo-upgrade-"));
+  const port = 33000 + Math.floor(Math.random() * 15000),
+    base = "http://127.0.0.1:" + port;
+  const entry = resolve("server/node.mjs");
+  const launch = async (explicit) => {
+    const env = {
+      ...process.env,
+      PORT: String(port),
+      HOST: "127.0.0.1",
+      AUTH_TOKEN: "",
+    };
+    if (explicit) env.DB_PATH = join(dir, "data", "previous-install.sqlite");
+    else delete env.DB_PATH;
+    const child = spawn(process.execPath, [entry], {
+      cwd: dir,
+      env,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(
+        () => reject(new Error("Startup timed out")),
+        10000,
+      );
+      child.stdout.on("data", (chunk) => {
+        if (String(chunk).includes("TKB Demo running")) {
+          clearTimeout(timer);
+          resolve();
+        }
+      });
+      child.on("exit", () => {
+        clearTimeout(timer);
+        reject(new Error("Server exited"));
+      });
+    });
+    return child;
+  };
+  const stop = async (child) => {
+    child.kill("SIGTERM");
+    await once(child, "exit");
+  };
+  let child;
+  try {
+    child = await launch(true);
+    const response = await fetch(base + "/api/merchants", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name: "Existing customer record",
+        url: "existing-customer.example",
+      }),
+    });
+    expect(response.status).toBe(201);
+    await stop(child);
+    child = await launch(false);
+    const state = await (await fetch(base + "/api/state")).json();
+    expect(
+      state.merchants.some((m) => m.name === "Existing customer record"),
+    ).toBe(true);
   } finally {
     if (child && child.exitCode === null) await stop(child);
     await rm(dir, { recursive: true, force: true });

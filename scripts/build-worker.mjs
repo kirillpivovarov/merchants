@@ -40,13 +40,13 @@ await writeFile(
   "dist/server/wrangler.json",
   JSON.stringify(
     {
-      name: "meridian-merchant-risk",
+      name: "tkb-demo-merchant-risk",
       main: "index.js",
       compatibility_date: "2026-06-01",
       d1_databases: [
         {
           binding: "DB",
-          database_name: "meridian",
+          database_name: "tkb-demo",
           database_id: "00000000-0000-0000-0000-000000000000",
           migrations_dir: "../../drizzle",
         },

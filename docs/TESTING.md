@@ -1,30 +1,8 @@
 # Регрессионное тестирование
 
-Итог: **PASS**. Проверен код `4bc2efa244827110e4cf43ad29d32307732cfd9b`. Выполнено 11 ноября 2026 года; хранение технических отметок времени — UTC.
+Обновление оформления «Демо для ТКБ»: локально прошли 77 тестов, TypeScript, production build и smoke собранного Worker. Браузерный прогон на GitHub Actions и актуальные снимки добавляются после завершения CI.
 
-[Успешный запуск GitHub Actions](https://github.com/kirillpivovarov/merchants/actions/runs/43000142745) · [HTML-отчёт и артефакты](https://github.com/kirillpivovarov/merchants/actions/runs/43000142745/artifacts/13844829054).
-
-| Проверка | Результат |
-|---|---|
-| TypeScript | PASS |
-| Unit / API / persistence / Node runtime / scanner | **76 из 76**, 5 файлов |
-| Реальный Chromium, desktop + mobile | **10 из 10**, без повторов, 9,7 с |
-| Собранный Worker + SQLite-совместимый D1 adapter | PASS: assets, identity, seed, CRUD, scan, report, недоступный live |
-| Production build | PASS |
-| npm audit, включая dev-зависимости | 0 известных уязвимостей на момент проверки |
-| Развёртывание Sites | succeeded |
-| Размещённые `/` и `/api/health` | 200; `storage: ready`, `mode: demo` |
-| Размещённый `/api/state` без пользовательской identity | 401, даже при service access: защита бизнес-данных работает |
-
-Покрытие выбранных модулей: **98,25% строк**, 97,47% statements, 97,14% functions, 93,05% branches. Это не процент покрытия всего UI.
-
-Развёрнуто: https://meridian-merchant-risk-kp.kirillpivovarov.chatgpt.site . Версия Sites: `appgprj_6af4363fc42c8191a6025c05bd021e11~appgver_130c3833b9348191a119811bc2cfe2c4`; deployment: `appgdep_6af43d3661288191a31d041dfc223b08`. Исходники публикации соответствуют проверенному коммиту.
-
-## Снимки из успешного браузерного прогона
-
-[Настольный обзор](screenshots/overview-desktop.png) · [Мобильный экран](screenshots/overview-mobile.png) · [Карточка / история](screenshots/merchant-evidence.png).
-
-![Обзор портфеля](screenshots/overview-desktop.png)
+Проверяются настольный и мобильный экраны, рабочие сценарии, монохромные цвета, Montserrat и печатный отчёт. Итоговые ссылки на запуск и публикацию фиксируются после завершения проверок.
 
 ## Уровни
 

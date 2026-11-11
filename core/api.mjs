@@ -320,7 +320,7 @@ export async function handleApi(
         headers: {
           "content-type": "text/csv; charset=utf-8",
           "content-disposition":
-            'attachment; filename="meridian-portfolio.csv"',
+            'attachment; filename="tkb-demo-portfolio.csv"',
           "cache-control": "no-store",
         },
       });
@@ -334,7 +334,7 @@ export async function handleApi(
           "content-type": "text/html; charset=utf-8",
           "cache-control": "no-store",
           "content-security-policy":
-            "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'self'",
+            "default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; base-uri 'none'; frame-ancestors 'self'",
         },
       });
     }

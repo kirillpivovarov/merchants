@@ -26,7 +26,6 @@ import {
   FileText,
   Pause,
   Play,
-  Compass,
   Activity,
   Filter,
   CheckCircle2,
@@ -41,11 +40,7 @@ import type {
   Risk,
   Check as CheckType,
 } from "./types";
-import "@fontsource/golos-text/cyrillic-400.css";
-import "@fontsource/golos-text/cyrillic-500.css";
-import "@fontsource/golos-text/latin-400.css";
-import "@fontsource/manrope/cyrillic-700.css";
-import "@fontsource/manrope/latin-700.css";
+import "./fonts.css";
 import "./style.css";
 const riskNames: Record<Risk, string> = {
   normal: "Норма",
@@ -174,8 +169,7 @@ function App() {
   if (login)
     return (
       <div className="login">
-        <Compass size={40} />
-        <h1>Меридиан</h1>
+        <h1>Демо для ТКБ</h1>
         <p>Войдите в рабочее пространство</p>
         <form
           onSubmit={(e) => {
@@ -206,7 +200,7 @@ function App() {
   if (!data)
     return (
       <div className="loading">
-        <Compass size={36} />
+        <strong className="loading-brand">Демо для ТКБ</strong>
         <p>{error || "Загружаем рабочее пространство…"}</p>
         {error && <button onClick={refresh}>Повторить</button>}
       </div>
@@ -242,12 +236,7 @@ function App() {
     <div className="app">
       <aside className={"sidebar " + (mobile ? "open" : "")}>
         <a className="brand" href="#overview" onClick={() => go("overview")}>
-          <div className="brand-icon">
-            <Compass size={27} strokeWidth={1.7} />
-          </div>
-          <div>
-            меридиан<span>КОНТРОЛЬ МЕРЧАНТОВ</span>
-          </div>
+          Демо для ТКБ
         </a>
         <div className="workspace">
           <div className="workspace-icon">Б</div>
@@ -1048,8 +1037,8 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              Меридиан <span className="footer-dot">·</span> Мониторинг сайтов
-              мерчантов
+              Демо для ТКБ <span className="footer-dot">·</span> Мониторинг
+              сайтов мерчантов
             </span>
             <span>
               <ShieldCheck size={13} /> Решения на основе проверяемых данных

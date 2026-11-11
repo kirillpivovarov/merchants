@@ -35,7 +35,7 @@ const call = async (path, body) =>
   );
 const page = await call("/");
 assert.equal(page.status, 200);
-assert.match(await page.text(), /Меридиан/);
+assert.match(await page.text(), /Демо для ТКБ/);
 const anon = await worker.fetch(
   new Request("https://smoke.example/api/state"),
   { DB },

@@ -176,7 +176,7 @@ test("CSV export and settings are reachable", async ({ page }) => {
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("link", { name: "Скачать CSV" }).click();
   const download = await downloadPromise;
-  expect(download.suggestedFilename()).toBe("meridian-portfolio.csv");
+  expect(download.suggestedFilename()).toBe("tkb-demo-portfolio.csv");
   await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await expect(page.getByText("Доступность источников")).toBeVisible();
   const toggle = page.getByRole("button", { name: "Расписание проверок" });
@@ -223,9 +223,101 @@ test("no browser errors or unexpected network failures on overview", async ({
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page.getByText("Распределение рисков")).toBeVisible();
-  await page.waitForTimeout(300);
+  await page.evaluate(() => document.fonts.ready);
   expect(errors).toEqual([]);
   expect(
-    await page.evaluate(() => document.fonts.check('12px "Golos Text"')),
+    await page.evaluate(() =>
+      document.fonts.check('12px "Montserrat Variable"'),
+    ),
   ).toBe(true);
+});
+
+test("monochrome styling, Montserrat and text-only identity on every screen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".brand")).toHaveText("Демо для ТКБ");
+  await expect(page.locator(".brand svg")).toHaveCount(0);
+  await expect(page).toHaveTitle("Демо для ТКБ · Мониторинг мерчантов");
+  for (const route of [
+    "overview",
+    "portfolio",
+    "scans",
+    "dictionary",
+    "reports",
+    "settings",
+  ]) {
+    await page.goto("/#" + route);
+    await expect(page.locator("h1")).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    const violations = await page.evaluate(() => {
+      const result: string[] = [];
+      for (const element of document.querySelectorAll<HTMLElement>("*")) {
+        const style = getComputedStyle(element);
+        for (const property of [
+          "color",
+          "backgroundColor",
+          "borderTopColor",
+          "outlineColor",
+        ] as const) {
+          const value = style[property],
+            rgb = value.match(/^rgba?\(\s*(\d+)[, ]+\s*(\d+)[, ]+\s*(\d+)/);
+          if (rgb && (rgb[1] !== rgb[2] || rgb[2] !== rgb[3]))
+            result.push(
+              element.tagName +
+                "." +
+                element.className +
+                " " +
+                property +
+                ": " +
+                value,
+            );
+        }
+      }
+      return result;
+    });
+    expect(violations, route + " must use only neutral colors").toEqual([]);
+    expect(
+      await page
+        .locator("body")
+        .evaluate((el) => getComputedStyle(el).fontFamily),
+    ).toContain("Montserrat Variable");
+    expect(
+      await page
+        .locator("h1")
+        .evaluate((el) => getComputedStyle(el).fontFamily),
+    ).toContain("Montserrat Variable");
+  }
+});
+
+test("printable audit uses the current text identity, neutral palette and local Montserrat", async ({
+  page,
+  request,
+}) => {
+  const state = await (await request.get("/api/state")).json();
+  await page.goto("/api/reports/" + state.scans[0].id);
+  await expect(
+    page.getByText("Демо для ТКБ · АУДИТ САЙТА", { exact: true }),
+  ).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  expect(
+    await page
+      .locator("body")
+      .evaluate((el) => getComputedStyle(el).fontFamily),
+  ).toContain("Montserrat Variable");
+  expect(
+    await page.evaluate(() =>
+      document.fonts.check('14px "Montserrat Variable"'),
+    ),
+  ).toBe(true);
+  expect(
+    await page
+      .locator("a")
+      .first()
+      .evaluate((el) => getComputedStyle(el).color),
+  ).toBe("rgb(23, 23, 23)");
+  await page.screenshot({
+    path: "test-results/audit-report.png",
+    fullPage: true,
+  });
 });

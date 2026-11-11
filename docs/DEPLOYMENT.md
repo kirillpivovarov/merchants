@@ -16,7 +16,7 @@ AUTH_TOKEN='replace-with-a-long-random-secret' HOST=0.0.0.0 npm start
 |---|---|---|
 | PORT | 3000 | HTTP-порт |
 | HOST | 127.0.0.1 | Интерфейс; внешний без ключа запрещён |
-| DB_PATH | data/meridian.sqlite | Постоянный путь SQLite |
+| DB_PATH | data/tkb-demo.sqlite | Постоянный путь SQLite |
 | AUTH_TOKEN | отсутствует | Ключ входа; хранить вне Git |
 | PUBLIC_ORIGIN | HTTP + Host запроса | Точный внешний HTTPS-origin за reverse proxy |
 | COOKIE_SECURE | false | `true` при HTTPS за reverse proxy |
@@ -32,7 +32,9 @@ export AUTH_TOKEN='your-long-random-secret'
 docker compose up --build -d
 ```
 
-Контейнер работает под непривилегированным пользователем; база сохраняется в volume `meridian-data`. В образ не входят PDF, Git, браузерные артефакты, `.env` или рабочая БД. Dockerfile выполняет проверку типов, unit/API/runtime-тесты и сборку. Сам контейнерный runtime в этой сессии отдельно не запускался; подтверждён запуск приложения как Node-процесса.
+При обновлении существующей Docker-установки укажите `TKB_DATA_VOLUME` с именем используемого тома; не создавайте пустой том вместо рабочего. Node без явного `DB_PATH` продолжает использовать единственный существующий файл `.sqlite` в каталоге `data`, поэтому смена названия не сбрасывает портфель.
+
+Контейнер работает под непривилегированным пользователем; база сохраняется в volume `tkb-demo-data`. В образ не входят PDF, Git, браузерные артефакты, `.env` или рабочая БД. Dockerfile выполняет проверку типов, unit/API/runtime-тесты и сборку. Сам контейнерный runtime в этой сессии отдельно не запускался; подтверждён запуск приложения как Node-процесса.
 
 ## Hosted demo в Sites
 
@@ -43,7 +45,7 @@ docker compose up --build -d
 - В этой среде отсутствовал поставляемый с Sites локальный source helper. Git-синхронизация и упаковка выполнены эквивалентными командами с временным credential через stdin, без сохранения его в файлах/исходниках.
 - Workers не выполняет Node-сканер и расписание: `capabilities.live=false`, `capabilities.scheduler=false`; API возвращает 503 на недоступные операции. Демо-проверки и остальные операции сохраняются в D1.
 
-Тестовый экземпляр: https://meridian-merchant-risk-kp.kirillpivovarov.chatgpt.site .
+Тестовый экземпляр: https://tkb-demo.kirillpivovarov.chatgpt.site .
 
 Адрес и результат конкретного развёртывания зафиксированы в отчёте тестирования и финальном сообщении. Изменения рабочего портфеля не входят в новый deploy и не сбрасываются при обновлении версии.
 

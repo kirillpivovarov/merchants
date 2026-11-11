@@ -1,13 +1,21 @@
 import http from "node:http";
 import { DatabaseSync } from "node:sqlite";
-import { readFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { dirname, resolve, extname } from "node:path";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { StateStore } from "./store.mjs";
 import { seedState } from "../core/seed.mjs";
 import { handleApi, runDue } from "../core/api.mjs";
 import { liveObservation } from "./scanner.mjs";
-const path = process.env.DB_PATH ?? "data/meridian.sqlite";
+// Keep the existing database on upgrade; fresh installs use the current product label.
+const existingFiles = existsSync("data")
+  ? readdirSync("data").filter((name) => name.endsWith(".sqlite"))
+  : [];
+const path =
+  process.env.DB_PATH ??
+  (existingFiles.length === 1
+    ? "data/" + existingFiles[0]
+    : "data/tkb-demo.sqlite");
 mkdirSync(dirname(path), { recursive: true });
 const db = new DatabaseSync(path);
 db.exec("PRAGMA journal_mode=WAL");
@@ -53,7 +61,7 @@ if (!["127.0.0.1", "localhost", "::1"].includes(host) && !token)
   throw new Error("AUTH_TOKEN обязателен для внешнего интерфейса");
 const signature = (expiry) =>
   createHmac("sha256", token)
-    .update("meridian-session-v1:" + expiry)
+    .update("tkb-demo-session-v1:" + expiry)
     .digest("hex");
 const sessionValid = (value) => {
   if (!token) return true;
@@ -90,7 +98,7 @@ const server = http.createServer(async (req, res) => {
       req.headers.cookie
         ?.split(";")
         .map((s) => s.trim())
-        .find((s) => s.startsWith("meridian_session="))
+        .find((s) => s.startsWith("tkb_demo_session="))
         ?.split("=")[1],
     );
     if (url.pathname === "/api/login" && req.method === "POST") {
@@ -128,7 +136,7 @@ const server = http.createServer(async (req, res) => {
         cookie = token ? expiry + "." + signature(expiry) : "";
       res.writeHead(200, {
         "content-type": "application/json",
-        "set-cookie": `meridian_session=${cookie}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${process.env.COOKIE_SECURE === "true" ? "; Secure" : ""}`,
+        "set-cookie": `tkb_demo_session=${cookie}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${process.env.COOKIE_SECURE === "true" ? "; Secure" : ""}`,
       });
       res.end("{}");
       return;
@@ -184,7 +192,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 server.listen(port, host, () =>
-  console.log(`Meridian running at http://${host}:${port}`),
+  console.log(`TKB Demo running at http://${host}:${port}`),
 );
 let ticking = false;
 const timer = setInterval(async () => {
